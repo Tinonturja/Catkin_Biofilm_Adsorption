@@ -1,0 +1,27 @@
+[project]
+name = "catkin-biofilm-adsorption"
+version = "1.0.0"
+description = "Kinetic, Isotherm, Molecular-dynamics-informed, and physics-informed neural network modeling of reactive dye adsorption on a catkin biofilm."
+readme = "README.MD"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {'name':'Tinon Turja Majumder'}
+]
+dependencies = [
+    "numpy==2.5.2",
+    "pandas==3.0.5",
+    "scikit-learn==1.9.0",
+    "scipy==1.18.0",
+    "torch==2.13.0"
+] 
+
+[project.urls]
+Repository = ""
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
