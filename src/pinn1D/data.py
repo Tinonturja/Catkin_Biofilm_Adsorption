@@ -45,6 +45,8 @@ class Data:
         self.input_scaler_fn = StandardScaler()
         self.X_scaled = self.input_scaler_fn.fit_transform(self.X_values)
         self.collocated_scaled = self.input_scaler_fn.transform(self.collocation_input.reshape(-1,1))
+        self.input_std = self.input_scaler_fn.scale_
+        self.input_mean = self.input_scaler_fn.mean_
 
     def get_tensor_scaled_data(self):
         """
@@ -52,7 +54,9 @@ class Data:
         """
         self.X_scaled_tensor = torch.tensor(self.X_scaled, dtype = torch.float32).view(-1,1)
         self.y_tensor = torch.tensor(self.y_values, dtype = torch.float32).view(-1,1)
-        self.collocated_scaled_tensor = torch.tensor(self.collocated_scaled, dtype = torch.float32).view(-1,1)
+        self.collocated_scaled_tensor = torch.tensor(self.collocated_scaled, dtype = torch.float32, requires_grad=True).view(-1,1)
+        self.input_std_torch = torch.tensor(self.input_std, dtype = torch.float32).view(-1,1)
+        self.input_mean_torch = torch.tensor(self.input_mean, dtype = torch.float32).view(-1,1)
         return self
 
     def processed_tensors(self):
@@ -66,7 +70,3 @@ isotherm_data = Data(data_path = "/Users/tinonturjamajumder/Catkin_Biofilm_Adsor
 kinetics_data = Data(data_path = "/Users/tinonturjamajumder/Catkin_Biofilm_Adsorption/data of biofilm(TINON BHAI).xlsx", dataset_name = "kinetics")
 isotherm_data.input_output_collocation_data(input_features = "Initial concentration", output_feature = "Qe", collocation_points = 50).processed_tensors()
 kinetics_data.input_output_collocation_data(input_features = "Time", output_feature = "qt( catkin)", collocation_points = 50).processed_tensors()
-print(f"Isotherm data collocation points: {isotherm_data.collocated_scaled_tensor.shape}")
-print(f"Kinetics data collocation points: {kinetics_data.collocated_scaled_tensor.shape}")
-print(f"Isotherm data input:\n {isotherm_data.X_scaled_tensor}")
-print(f"Kinetics data input:\n {kinetics_data.X_scaled_tensor}")
