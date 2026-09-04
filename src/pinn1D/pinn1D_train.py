@@ -51,6 +51,8 @@ def train_isotherm_data(model,
             results_dict['Data Loss'].append(isotherm_loss.item())
             results_dict['Collocation Loss'].append(iso_loss.item())
             results_dict['Total Loss'].append(total_loss.item())
+    # print the learnable parameters
+    print(f"Learnable Parameters:\n k_f: {k_f.item():.44f} | inv_n: {inv_n.item():.4f}")
     return results_dict
 
 def train_kinetics_data(model,
@@ -117,7 +119,11 @@ def train_kinetics_data(model,
             results_dict['PSO Loss'].append(pso_loss.item())
             results_dict['Initial Loss'].append(initial_loss.item())
             results_dict['Total Loss'].append(total_loss.item())
+    # print the learnable parameters
+    print(f"Learnable Parameters:\n k2: {k2.item():.4f} | qe: {qe.item():.4f}")
     return results_dict
+
+
 torch.manual_seed(42)
 torch.mps.manual_seed(42)
 kinetics_model = KineticsPINNModel(input_size = 1, hidden_size = 32, output_size = 1)
