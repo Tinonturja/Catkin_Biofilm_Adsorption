@@ -93,13 +93,13 @@ def save_the_model(model, save_path):
 
 if __name__ == "__main__":
     data_path = './data of biofilm(TINON BHAI).xlsx'
-    data = Data(data_path=data_path, dataset_name='kinetics').input_output_collocation_data(input_features='Time', output_feature='qt', collocation_points=50)
+    data = Data(data_path=data_path, dataset_name='kinetics').input_output_collocation_data(input_features='Time', output_feature= 'qt( catkin)', collocation_points=50)
     data.processed_tensors()
     initial_qe = data.y_values.max() * 1.2
 
     torch.manual_seed(42)
     torch.mps.manual_seed(42)
-    model = KineticsPINNModel(...)
+    model = KineticsPINNModel(input_size=1, hidden_size=20, output_size=1, initial_qe=initial_qe)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     trainining = train_kinetics_data(model=model, optimizer=optimizer, loss_fn=F.mse_loss,
