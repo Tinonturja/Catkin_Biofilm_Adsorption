@@ -63,10 +63,3 @@ class Data:
         self.processing_data() # numpy scaled data
         self.get_tensor_scaled_data() # tensor of the scaled data
         return self
-
-# create a object of the Data class
-
-isotherm_data = Data(data_path = "/Users/tinonturjamajumder/Catkin_Biofilm_Adsorption/data of biofilm(TINON BHAI).xlsx", dataset_name = "isotherm")
-kinetics_data = Data(data_path = "/Users/tinonturjamajumder/Catkin_Biofilm_Adsorption/data of biofilm(TINON BHAI).xlsx", dataset_name = "kinetics")
-isotherm_data.input_output_collocation_data(input_features = "Initial concentration", output_feature = "Qe", collocation_points = 50).processed_tensors()
-kinetics_data.input_output_collocation_data(input_features = "Time", output_feature = "qt( catkin)", collocation_points = 50).processed_tensors()

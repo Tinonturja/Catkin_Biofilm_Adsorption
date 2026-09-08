@@ -4,56 +4,13 @@
 import pandas as pd
 import os
 import torch
-from data import isotherm_data, kinetics_data
-from pinn1D import KineticsPINNModel, IsothermPINNModel
+from data import Data
+from pinn1D import KineticsPINNModel
 import torch.nn.functional as F
-from utility import predict_qe
 import numpy as np
 
 # declare the device
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-
-def train_isotherm_data(model,
-                        optimizer,loss_fn,
-                        isotherm_data,
-                        device = device,
-                        num_epochs=5000):
-    results_dict = {'Data Loss': [], 'Collocation Loss': [], 'Total Loss': []}
-    # model into training mode
-    model.train()
-    model.to(device)
-    # Get the input and output data for isotherm and kinetics datasets
-    isotherm_input = isotherm_data.X_scaled_tensor 
-    isotherm_output = isotherm_data.y_tensor
-    isotherm_collocation = isotherm_data.collocated_scaled_tensor
-    isotherm_input = isotherm_input.to(device)
-    isotherm_output = isotherm_output.to(device)
-    isotherm_collocation = isotherm_collocation.to(device)
-    for epoch in range(num_epochs):
-        optimizer.zero_grad()
-        # Forward pass for isotherm data
-        isotherm_pred = model(isotherm_input)
-        isotherm_loss = loss_fn(isotherm_pred, isotherm_output)
-        # Do the prediction on the collocation points
-        qe_collocation_pred = model(isotherm_collocation)
-        ## get the learnable parameters
-        k_f = F.softplus(model.k_f)
-        inv_n = F.softplus(model.inv_n)
-        calculated_qe = predict_qe(Co = torch.tensor(isotherm_data.collocation_input, dtype=torch.float32).view(-1,1).to(device), # prediction on raw data
-                                    k_f = k_f,
-                                    inv_n = inv_n)
-        iso_loss = torch.mean((qe_collocation_pred - calculated_qe) ** 2)
-        total_loss = isotherm_loss + iso_loss
-        total_loss.backward()
-        optimizer.step()
-        if (epoch + 1) % 100 == 0:
-            print(f'Isotherm Training:\nEpoch [{epoch + 1}/{num_epochs}] | Data Loss: {isotherm_loss:.4f} | Collocation Loss: {iso_loss:.4f} | Total Loss: {total_loss:.4f}')
-            results_dict['Data Loss'].append(isotherm_loss.item())
-            results_dict['Collocation Loss'].append(iso_loss.item())
-            results_dict['Total Loss'].append(total_loss.item())
-    # print the learnable parameters
-    print(f"Learnable Parameters:\n k_f: {k_f.item():.44f} | inv_n: {inv_n.item():.4f}")
-    return results_dict
 
 def train_kinetics_data(model,
                         optimizer,
@@ -123,34 +80,29 @@ def train_kinetics_data(model,
     print(f"Learnable Parameters:\n k2: {k2.item():.4f} | qe: {qe.item():.4f}")
     return results_dict
 
+def save_the_model(model, save_path):
 
-torch.manual_seed(42)
-torch.mps.manual_seed(42)
-kinetics_model = KineticsPINNModel(input_size = 1, hidden_size = 32, output_size = 1)
-isotherm_model = IsothermPINNModel(input_size = 1, hidden_size = 32, output_size = 1)
-kinetics_optimizer = torch.optim.Adam(kinetics_model.parameters(), lr=0.001)
-isotherm_optimizer = torch.optim.Adam(isotherm_model.parameters(), lr=0.001)
-loss_fn = torch.nn.MSELoss()
-kinetics_training = train_kinetics_data(model = kinetics_model,
-                                        optimizer = kinetics_optimizer,
-                                        loss_fn = loss_fn,
-                                        kinetics_data = kinetics_data,
-                                        device = device,
-                                        num_epochs = 5000)
-isotherm_training = train_isotherm_data(model = isotherm_model,                                        optimizer = isotherm_optimizer,
-                                        loss_fn = loss_fn,
-                                        isotherm_data = isotherm_data,
-                                        device = device,
-                                        num_epochs = 5000)
+    """
+    Save the model to the given path
+    """
+    # create directory if it does not exist
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    torch.save(model.state_dict(), save_path)
+    # save the result dictionary
+# get the data
 
-# save the model parameters and the training results dict
-# create a directory to save the model parameters and the training results
+if __name__ == "__main__":
+    data_path = './data of biofilm(TINON BHAI).xlsx'
+    data = Data(data_path=data_path, dataset_name='kinetics').input_output_collocation_data(input_features='Time', output_feature='qt', collocation_points=50)
+    data.processed_tensors()
+    initial_qe = data.y_values.max() * 1.2
 
-if not os.path.exists("./results"):
-    os.makedirs("./results")
-torch.save(kinetics_model.state_dict(), "./results/kinetics_model.pth")
-torch.save(isotherm_model.state_dict(), "./results/isotherm_model.pth")
-kinetics_training_df = pd.DataFrame(kinetics_training)
-isotherm_training_df = pd.DataFrame(isotherm_training)
-kinetics_training_df.to_csv("./results/kinetics_training_results.csv", index=False)
-isotherm_training_df.to_csv("./results/isotherm_training_results.csv", index=False)
+    torch.manual_seed(42)
+    torch.mps.manual_seed(42)
+    model = KineticsPINNModel(...)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
+    trainining = train_kinetics_data(model=model, optimizer=optimizer, loss_fn=F.mse_loss,
+                                      kinetics_data=data, device=device, num_epochs=5000)
+    save_the_model(model, './models/kinetics_pinn_model.pth')
+    print("Model saved successfully at ./models/kinetics_pinn_model.pth")
