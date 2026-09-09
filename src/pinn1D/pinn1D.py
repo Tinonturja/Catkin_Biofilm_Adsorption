@@ -23,3 +23,4 @@ class KineticsPINNModel(nn.Module):
     def forward(self,x):
         return self.net(x)
 
+class Isotherm

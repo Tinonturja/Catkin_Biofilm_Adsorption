@@ -18,7 +18,7 @@ def train_kinetics_data(model,
                         kinetics_data,
                         device = device,
                         num_epochs = 5000):
-    results_dict = {'Data Loss': [], 'PSO Loss': [], 'Initial Loss': [], 'Total Loss': []}
+    results_dict = {'Data Loss': [], 'PSO Loss': [], 'Initial Loss': [], 'Overshoot Loss': []}
     model.train()
     model.to(device)
     kinetics_input = kinetics_data.X_scaled_tensor
@@ -66,18 +66,27 @@ def train_kinetics_data(model,
         initial_scaled_time_torch = torch.tensor(initial_scaled_time,dtype = torch.float32, device=device)
         initial_qt = model(initial_scaled_time_torch)
         initial_loss = torch.mean(initial_qt**2)
-        total_loss = kinetics_loss + pso_loss + initial_loss
+        #==================================
+        # LOSS D: Overshoot LOSS
+        #================================== 
+        overshoot_loss = torch.mean(torch.relu(collocation_prediction - qe) ** 2)
+        overshoot_weight = 5
+        total_loss = kinetics_loss + pso_loss + initial_loss + overshoot_weight * overshoot_loss
         total_loss.backward()
         optimizer.step()
-
         if (epoch + 1) % 100 == 0:
-            print(f'Kinetics Training:\nEpoch [{epoch + 1}/{num_epochs}] | Data Loss: {kinetics_loss.item():.4f} | PSO Loss: {pso_loss.item():.4f} | Initial Loss: {initial_loss.item():.4f} | Total Loss: {total_loss.item():.4f}')
+            print(f'Kinetics Training:\nEpoch [{epoch + 1}/{num_epochs}] | Data Loss: {kinetics_loss.item():.4f} | PSO Loss: {pso_loss.item():.4f} | Initial Loss: {initial_loss.item():.4f} | Overshoot Loss: {overshoot_loss.item():.4f} | Total Loss: {total_loss.item():.4f}')
             results_dict['Data Loss'].append(kinetics_loss.item())
             results_dict['PSO Loss'].append(pso_loss.item())
             results_dict['Initial Loss'].append(initial_loss.item())
-            results_dict['Total Loss'].append(total_loss.item())
+            results_dict['Overshoot Loss'].append(overshoot_loss.item())
+    final_k2 = F.softplus(model.k2).item()
+    final_qe = F.softplus(model.qe).item()
     # print the learnable parameters
-    print(f"Learnable Parameters:\n k2: {k2.item():.4f} | qe: {qe.item():.4f}")
+    print("="* 60 )
+    print("Training Completed!")
+    print("="* 60 )
+    print(f"Learnable Parameters:\n k2: {final_k2:.4f} | qe: {final_qe:.4f}")
     return results_dict
 
 def save_the_model(model, save_path):
@@ -93,16 +102,21 @@ def save_the_model(model, save_path):
 
 if __name__ == "__main__":
     data_path = './data of biofilm(TINON BHAI).xlsx'
-    data = Data(data_path=data_path, dataset_name='kinetics').input_output_collocation_data(input_features='Time', output_feature= 'qt( catkin)', collocation_points=50)
+    data = Data(data_path=data_path, dataset_name='kinetics').input_output_collocation_data(
+        input_features='Time',
+        output_feature='qt( catkin)',
+        collocation_points=100,              
+        collocation_range_multiplier=2.0     
+    )
     data.processed_tensors()
     initial_qe = data.y_values.max() * 1.2
 
     torch.manual_seed(42)
     torch.mps.manual_seed(42)
     model = KineticsPINNModel(input_size=1, hidden_size=20, output_size=1, initial_qe=initial_qe)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.005)
 
     trainining = train_kinetics_data(model=model, optimizer=optimizer, loss_fn=F.mse_loss,
-                                      kinetics_data=data, device=device, num_epochs=5000)
+                                      kinetics_data=data, device=device, num_epochs=8000)
     save_the_model(model, './models/kinetics_pinn_model.pth')
     print("Model saved successfully at ./models/kinetics_pinn_model.pth")

@@ -29,15 +29,16 @@ class Data:
        print(f"Dataframe Shape: {self.dataframe.shape}")
        print(f"Dataframe Columns: {self.dataframe.columns.tolist()}")
        
-    def input_output_collocation_data(self, input_features:str, output_feature:str, collocation_points:int):
+    def input_output_collocation_data(self, input_features:str, output_feature:str, collocation_points:int,collocation_range_multiplier: float = 1.0):
         # set the input and the output
         self.X = self.dataframe[input_features]
         self.y = self.dataframe[output_feature]
         self.X_values = self.X.values.reshape(-1,1) 
         self.y_values = self.y.values.reshape(-1,1)
-        self.collocation_input = np.linspace(start =np.min(self.X_values),stop = np.max(self.X_values), num = collocation_points)
-        return self        
-
+        collocation_min = np.min(self.X_values)
+        collocation_max = np.max(self.X_values) * collocation_range_multiplier
+        self.collocation_input = np.linspace(start=collocation_min, stop=collocation_max, num=collocation_points)
+        return self
     def processing_data(self):
         """
         Scaled the input values of both kinetics dataset, and isotherm dataset
