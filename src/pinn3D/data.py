@@ -13,10 +13,10 @@ class DataConfig:
     isotherm_sheet: str = 'catkin'
 
     kinetics_concentration: float = 40
-    kinetics_dosage: float = 24
+    kinetics_dosage: float = 1/24
 
     isotherm_time: float = 170
-    isotherm_dosage: float = 10
+    isotherm_dosage: float = 1/10
 
     input_columns: tuple[str, ...] = (
         'Time',
@@ -24,9 +24,10 @@ class DataConfig:
         'Dosage'
     )
     target_column: str = 'Adsorption'
-    time_collocation_point = 30
-    concentration_collocation_point = 30
-    volume_collocation_point = 4
+    time_collocation_num:int = 25
+    conc_collocation_num:int = 25
+    vm_collocation_num:int = 4
+    biofilm_mass:int = 5
 
 class CombinedData:
     def __init__(self, data_path:str, config: DataConfig):
@@ -42,9 +43,6 @@ class CombinedData:
                 f"Data file not found: {self.data_path}"
             )
         self.data_sheets_dict = pd.read_excel(self.data_path, sheet_name = None)
-        self.time_collocation = None
-        self.concentration_collocation = None
-        self.dosage_collocation = None
         
     def process_kinetics_data(self) -> pd.DataFrame:
         df = self.data_sheets_dict[
@@ -96,6 +94,19 @@ class CombinedData:
         self.input_tensor = torch.tensor(self.input.to_numpy(), dtype = torch.float32)
         self.output_tensor = torch.tensor(self.output.to_numpy(), dtype = torch.float32)
         return self
+    
+    def collocation_data(self):
+        time_alloc = np.linspace(0, 200, num = self.config.time_collocation_num)
+        vm_alloc = np.linspace(0.030, 0.120, num = self.config.vm_collocation_num)
+        conc_alloc = np.linspace(15, 65, num = self.config.conc_collocation_num)
+        T,C,V = np.meshgrid(time_alloc,conc_alloc,vm_alloc)
+        self.allocated_input = np.column_stack([T.reshape(-1,1),
+        C.reshape(-1,1),
+        V.reshape(-1,1)])
+        self.collocated_input_tensor = torch.tensor(self.allocated_input,
+        requires_grad=True)
+        return self
+    
     def scaling_data(self):
         self.input_scaler = StandardScaler()
         self.output_scaler = StandardScaler()
@@ -128,8 +139,14 @@ class CombinedData:
         self.scaling_data()
         return self
     
-config = DataConfig()
-data = CombinedData(data_path = "/Users/tinonturjamajumder/Catkin_Biofilm_Adsorption/data of biofilm(TINON BHAI).xlsx",
-                    config=config)
-data.whole_data_processing()
-print(data.scaled_input_tensor)
+def load_data(data_path):
+    config = DataConfig()
+
+    data = CombinedData(
+        data_path=data_path,
+        config=config
+    )
+
+    data.whole_data_processing()
+
+    return data
