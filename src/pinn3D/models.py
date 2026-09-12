@@ -24,6 +24,14 @@ class PINN3DModel(nn.Module):
     def forward(self, x):
         output = self.net(x)
         return output
+    
+    def predict_qe(self, co, dosage, n_iter:int = 40, damping:float = 0.3):
+        qe = 0.5 * co * dosage 
+        for _ in range(n_iter):
+            Ce = torch.clamp(co - qe/dosage, min = 1e-8)
+            qe_new = self.k2 * (Ce**self.n)
+            qe = (1-damping)* qe + damping * qe
+            return qe
 """
 if __name__ == "__main__":
     initial_k2 = torch.tensor([[-2.0]])

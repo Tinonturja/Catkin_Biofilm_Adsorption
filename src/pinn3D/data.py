@@ -18,6 +18,8 @@ class DataConfig:
     isotherm_time: float = 170
     isotherm_dosage: float = 1/10
 
+    device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')
+
     input_columns: tuple[str, ...] = (
         'Time',
         'Concentration',
@@ -92,19 +94,7 @@ class CombinedData:
         self.output = self.combined_df[self.config.target_column]
         # turn them into tensor
         self.input_tensor = torch.tensor(self.input.to_numpy(), dtype = torch.float32)
-        self.output_tensor = torch.tensor(self.output.to_numpy(), dtype = torch.float32)
-        return self
-    
-    def collocation_data(self):
-        time_alloc = np.linspace(0, 200, num = self.config.time_collocation_num)
-        vm_alloc = np.linspace(0.030, 0.120, num = self.config.vm_collocation_num)
-        conc_alloc = np.linspace(15, 65, num = self.config.conc_collocation_num)
-        T,C,V = np.meshgrid(time_alloc,conc_alloc,vm_alloc)
-        self.allocated_input = np.column_stack([T.reshape(-1,1),
-        C.reshape(-1,1),
-        V.reshape(-1,1)])
-        self.collocated_input_tensor = torch.tensor(self.allocated_input,
-        requires_grad=True)
+        self.output_tensor = torch.tensor(self.output.to_numpy(), dtype = torch.float32).view(-1,1)
         return self
     
     def scaling_data(self):
@@ -129,7 +119,23 @@ class CombinedData:
                 self.input_std
             )
         } 
+        self.scaled_input_tensor.to(self.config.device)
+        self.scaled_output_tensor.to(self.config.device)
         return self
+
+    def collocation_data(self):
+        time_alloc = np.linspace(0, 200, num = self.config.time_collocation_num)
+        vm_alloc = np.linspace(0.030, 0.120, num = self.config.vm_collocation_num)
+        conc_alloc = np.linspace(15, 65, num = self.config.conc_collocation_num)
+        T,C,V = np.meshgrid(time_alloc,conc_alloc,vm_alloc)
+        self.allocated_input = np.column_stack([T.reshape(-1,1),
+        C.reshape(-1,1),
+        V.reshape(-1,1)])
+        self.collocated_scaled = self.input_scaler.transform(self.allocated_input)
+        self.collocated_scaled_input_tensor = torch.tensor(self.allocated_input, dtype = torch.float32,requires_grad=True)
+        self.collocated_scaled_input_tensor.to(self.config.device)
+        return self
+    
     
     def whole_data_processing(self):
         self.process_kinetics_data()
@@ -137,6 +143,7 @@ class CombinedData:
         self.combined_data()
         self.get_input_output()
         self.scaling_data()
+        self.collocation_data()
         return self
     
 def load_data(data_path):
