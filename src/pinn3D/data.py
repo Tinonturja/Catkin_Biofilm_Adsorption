@@ -18,9 +18,6 @@ class DataConfig:
     isotherm_time: float = 170
     isotherm_dosage: float = 1/10
 
-    # PSO loss needs torch.autograd.grad(create_graph=True) through the model
-    # (double backward); PyTorch's MPS backend produces NaN gradients for some
-    # inputs on this path, so training must run on CPU.
     device = torch.device('cpu')
 
     input_columns: tuple[str, ...] = (
