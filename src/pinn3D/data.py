@@ -18,7 +18,10 @@ class DataConfig:
     isotherm_time: float = 170
     isotherm_dosage: float = 1/10
 
-    device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')
+    # PSO loss needs torch.autograd.grad(create_graph=True) through the model
+    # (double backward); PyTorch's MPS backend produces NaN gradients for some
+    # inputs on this path, so training must run on CPU.
+    device = torch.device('cpu')
 
     input_columns: tuple[str, ...] = (
         'Time',
@@ -30,6 +33,8 @@ class DataConfig:
     conc_collocation_num:int = 25
     vm_collocation_num:int = 4
     biofilm_mass:int = 5
+
+    t_max = 400
 
 class CombinedData:
     def __init__(self, data_path:str, config: DataConfig):
@@ -118,9 +123,7 @@ class CombinedData:
                 self.input_mean,
                 self.input_std
             )
-        } 
-        self.scaled_input_tensor.to(self.config.device)
-        self.scaled_output_tensor.to(self.config.device)
+        }
         return self
 
     def collocation_data(self):
@@ -128,22 +131,44 @@ class CombinedData:
         vm_alloc = np.linspace(0.030, 0.120, num = self.config.vm_collocation_num)
         conc_alloc = np.linspace(15, 65, num = self.config.conc_collocation_num)
         T,C,V = np.meshgrid(time_alloc,conc_alloc,vm_alloc)
-        self.allocated_input = np.column_stack([T.reshape(-1,1),
+        self.collocated_input = np.column_stack([T.reshape(-1,1),
         C.reshape(-1,1),
         V.reshape(-1,1)])
-        self.collocated_scaled = self.input_scaler.transform(self.allocated_input)
-        self.collocated_scaled_input_tensor = torch.tensor(self.allocated_input, dtype = torch.float32,requires_grad=True)
-        self.collocated_scaled_input_tensor.to(self.config.device)
+        self.collocated_scaled = self.input_scaler.transform(self.collocated_input)
+        self.collocated_scaled_input_tensor = torch.tensor(self.collocated_scaled, dtype = torch.float32,requires_grad=True)
+        self.collocated_scaled_input_tensor = self.collocated_scaled_input_tensor.to(self.config.device)
         return self
+
+    def max_time_data(self):
+        max_time_scaled = (self.config.t_max - self.input_stats['Time']['mean'])/self.input_stats['Time']['std']
+        collocated_maxtime_scaled = self.collocated_scaled.copy()
+        collocated_maxtime_scaled[:,0] = max_time_scaled
+        self.max_time_tensor = torch.tensor(collocated_maxtime_scaled, dtype = torch.float32)
+        self.max_time_tensor = self.max_time_tensor.to(self.config.device)
+
+    def initial_time_data(self):
+        initial_time_datapoints = self.collocated_scaled.copy()
+        initial_t_scaled = (0 - self.input_stats['Time']['mean'])/self.input_stats['Time']['std']
+        initial_time_datapoints[:, 0:1] = initial_t_scaled
+        self.initial_scaled_datapoints_tensor = torch.tensor(initial_time_datapoints, dtype = torch.float32)
+        self.initial_scaled_datapoints_tensor = self.initial_scaled_datapoints_tensor.to(self.config.device)
     
-    
+    def pass_to_device(self, data_list:list):
+        self.scaled_input_tensor = self.scaled_input_tensor.to(self.config.device)
+        self.scaled_output_tensor = self.scaled_output_tensor.to(self.config.device)
+        self.collocated_scaled_input_tensor = self.collocated_scaled_input_tensor.to(self.config.device)
+        self.initial_scaled_datapoints_tensor = self.initial_scaled_datapoints_tensor.to(self.config.device)
+        self.max_time_tensor = self.max_time_tensor.to(self.config.device)
+
     def whole_data_processing(self):
         self.process_kinetics_data()
         self.process_isotherm_data()
-        self.combined_data()
+        self.combined_data() 
         self.get_input_output()
         self.scaling_data()
         self.collocation_data()
+        self.max_time_data()
+        self.initial_time_data()
         return self
     
 def load_data(data_path):
