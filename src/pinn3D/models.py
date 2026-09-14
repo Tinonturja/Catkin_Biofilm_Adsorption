@@ -44,25 +44,3 @@ def predict_qe(co, dosage, kf, n, n_iter:int = 40, damping:float = 0.3, return_d
         }
         return qe, diagnostics
     return qe
-
-
-
-"""
-if __name__ == "__main__":
-    initial_k2 = torch.tensor([[-2.0]])
-    initial_qe = torch.tensor([[1.25]])
-    initial_kf = torch.tensor([[0.673]])
-    initial_n = torch.tensor([[0.23]])
-    input_size = 3
-    hidden_size = 16
-    output_size = 1
-    pinn3D_model = PINN3DModel(input_size = input_size,
-                               hidden_size = hidden_size,
-                               output_size = output_size,
-                               initial_k2= initial_k2,
-                               initial_qe = initial_qe,
-                               initial_kf = initial_kf,
-                               initial_n = initial_n)
-    print(pinn3D_model.state_dict())
-    
-"""
