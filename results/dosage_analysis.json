@@ -1,0 +1,23 @@
+{
+  "20.0": {
+    "removal_pct_at_0.03": 89.21601652563142,
+    "removal_pct_at_0.12": 44.65772187231139,
+    "qt_at_0.03": 0.5352960991537885,
+    "qt_at_0.12": 1.0717853249354734,
+    "diminishing_returns_dosage_for_absolute_capacity": null
+  },
+  "40.0": {
+    "removal_pct_at_0.03": 79.54885049206905,
+    "removal_pct_at_0.12": 32.74738789633605,
+    "qt_at_0.03": 0.9545862059048285,
+    "qt_at_0.12": 1.5718746190241302,
+    "diminishing_returns_dosage_for_absolute_capacity": 0.10153846153846154
+  },
+  "60.0": {
+    "removal_pct_at_0.03": 71.83062603264892,
+    "removal_pct_at_0.12": 26.84076470623529,
+    "qt_at_0.03": 1.2929512685876805,
+    "qt_at_0.12": 1.932535058848941,
+    "diminishing_returns_dosage_for_absolute_capacity": 0.0946153846153846
+  }
+}

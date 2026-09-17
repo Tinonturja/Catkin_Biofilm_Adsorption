@@ -1,0 +1,86 @@
+{
+  "0": {
+    "arm": "kinetics",
+    "actual": 0.0,
+    "predicted": 0.48435256250357306,
+    "time_sec": 108.4093108177185
+  },
+  "1": {
+    "arm": "kinetics",
+    "actual": 0.72145,
+    "predicted": 0.5420216077714409,
+    "time_sec": 110.39682245254517
+  },
+  "2": {
+    "arm": "kinetics",
+    "actual": 0.84218,
+    "predicted": 0.8804881260704941,
+    "time_sec": 104.8256664276123
+  },
+  "3": {
+    "arm": "kinetics",
+    "actual": 0.85548,
+    "predicted": 0.854000179966188,
+    "time_sec": 101.70616865158081
+  },
+  "4": {
+    "arm": "kinetics",
+    "actual": 0.8851,
+    "predicted": 0.8669207631054534,
+    "time_sec": 103.1106584072113
+  },
+  "5": {
+    "arm": "kinetics",
+    "actual": 0.99843,
+    "predicted": 1.0126055925607067,
+    "time_sec": 105.09833002090454
+  },
+  "6": {
+    "arm": "kinetics",
+    "actual": 1.10776,
+    "predicted": 1.1082923907042752,
+    "time_sec": 101.91415452957153
+  },
+  "7": {
+    "arm": "kinetics",
+    "actual": 1.15607,
+    "predicted": 1.1570922111487647,
+    "time_sec": 103.23989057540894
+  },
+  "8": {
+    "arm": "kinetics",
+    "actual": 1.17853,
+    "predicted": 1.1869907075053832,
+    "time_sec": 105.20241785049438
+  },
+  "9": {
+    "arm": "isotherm",
+    "actual": 0.7465,
+    "predicted": 0.7119568667618557,
+    "time_sec": 103.39270401000977
+  },
+  "10": {
+    "arm": "isotherm",
+    "actual": 1.13912,
+    "predicted": 1.3778360775708878,
+    "time_sec": 104.52463507652283
+  },
+  "11": {
+    "arm": "isotherm",
+    "actual": 1.55587,
+    "predicted": 1.377344207891411,
+    "time_sec": 103.1754961013794
+  },
+  "12": {
+    "arm": "isotherm",
+    "actual": 2.06288,
+    "predicted": 2.6378355983802138,
+    "time_sec": 105.40845394134521
+  },
+  "13": {
+    "arm": "isotherm",
+    "actual": 2.48536,
+    "predicted": 1.2635563867426023,
+    "time_sec": 103.04471588134766
+  }
+}

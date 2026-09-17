@@ -1,5 +1,4 @@
 import torch
-import
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
@@ -8,6 +7,10 @@ from data import Data
 from pinn1D import KineticsPINNModel
 import pandas as pd
 from sklearn.metrics import r2_score
+from pathlib import Path
+
+# src/pinn1D/testing.py -> project root is two levels up
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 # After training, check what Ce the model settled on
 def check_Ce_for_given_Co():
@@ -49,11 +52,11 @@ def calculate_r2(pred_qe, real_qe):
     return r2_value
 if __name__ == "__main__":
     # Load the trained model
-    data_path = '/Users/tinonturjamajumder/Catkin_Biofilm_Adsorption/data of biofilm(TINON BHAI).xlsx'
-    data = Data(data_path=data_path, dataset_name='kinetics').input_output_collocation_data(input_features='Time', output_feature= 'qt( catkin)', collocation_points=50)    
+    data_path = str(PROJECT_ROOT / 'data' / 'data_of_biofilm.xlsx')
+    data = Data(data_path=data_path, dataset_name='kinetics').input_output_collocation_data(input_features='Time', output_feature= 'qt( catkin)', collocation_points=50)
     data.processed_tensors()
     model = KineticsPINNModel(input_size=1, hidden_size=20, output_size=1, initial_qe=data.y_values.max() * 1.2)
-    model.load_state_dict(torch.load('/Users/tinonturjamajumder/Catkin_Biofilm_Adsorption/models/kinetics_pinn_model.pth'))
+    model.load_state_dict(torch.load(str(PROJECT_ROOT / 'models' / 'kinetics_pinn_model.pth')))
     input_mean = data.input_mean_torch
     input_std = data.input_std_torch
     input_mean, input_std = input_mean.to(pinn1D_train.device), input_std.to(pinn1D_train.device)
@@ -78,6 +81,6 @@ if __name__ == "__main__":
     
     results_df = pd.DataFrame(results_dict)
     extended_df = pd.DataFrame(extended_results_dict)
-    results_df.to_csv('/Users/tinonturjamajumder/Catkin_Biofilm_Adsorption/results/kinetics_pinn_predictions.csv', index=False)
-    extended_df.to_csv('/Users/tinonturjamajumder/Catkin_Biofilm_Adsorption/results/kinetics_pinn_extended_predictions.csv', index=False)
+    results_df.to_csv(str(PROJECT_ROOT / 'results' / 'kinetics_pinn_predictions.csv'), index=False)
+    extended_df.to_csv(str(PROJECT_ROOT / 'results' / 'kinetics_pinn_extended_predictions.csv'), index=False)
     print(R2_Score)

@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it. A DOI will be added here once the first release is archived on Zenodo."
+title: "Catkin Biofilm Adsorption: physics-informed modelling of reactive dye adsorption on a Saccharum spontaneum (Catkin) flower-fibre CMC/PVA/TiO2 biofilm"
+abstract: >-
+  Code accompanying a study of Avitera Light Red SE adsorption on a
+  citric-acid crosslinked PVA/TiO2/cellulose-microcrystal (CMC) biofilm, in
+  which the CMC was extracted from Saccharum spontaneum (Catkin) flower
+  fibre. Includes classical pseudo-first/second-order kinetics and
+  Langmuir/Freundlich isotherm fitting, and PINN3D, a physics-informed
+  neural network that jointly fits the kinetics and isotherm data through a
+  shared mass-balance constraint to estimate adsorption performance under
+  contact time, concentration and dosage combinations that were not
+  directly measured, with leave-one-out cross-validation reported alongside
+  the in-sample fit.
+type: software
+license: MIT
+version: "0.1.0"
+repository-code: "https://github.com/Tinonturja/Catkin_Biofilm_Adsorption"
+keywords:
+  - adsorption
+  - physics-informed neural networks
+  - reactive dye
+  - biofilm
+  - cellulose microcrystals
+authors:
+  - family-names: Majumder
+    given-names: Tinon Turja
+    # orcid: "https://orcid.org/0000-0000-0000-0000"   # add once registered at orcid.org

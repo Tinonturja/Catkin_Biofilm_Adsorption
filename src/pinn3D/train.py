@@ -26,18 +26,8 @@ EPOCHS = 8000
 # (double backward); PyTorch's MPS backend produces NaN gradients for some
 # inputs on this path, so training must run on CPU.
 DEVICE = torch.device('cpu')
-
-# Freundlich exponent n is applied directly to raw concentration (up to ~65),
-# so n > ~1 makes qe_real blow up (65**2 ~ 4200, 65**3 ~ 275000). Real
-# adsorption data tops out at ~2.5, which matches n in (0,1) (the usual
-# sub-linear Freundlich regime) -- so n is bounded there instead of left
-# unbounded via softplus.
 N_MIN = 0.05
 N_MAX = 1.0
-# Without a floor, k2 can be driven to ~0 during training, which trivially
-# zeroes the PSO residual (k2*(qe-qt)**2 term vanishes) without the model
-# ever learning real kinetics -- this also lets kf/n drift unchecked since
-# the ODE constraint on them disappears. The floor keeps that constraint live.
 K2_FLOOR = 1e-3
 
 # --- Fixed manual loss weights (loss-spike fix, see PINN3D_knowledge_transfer.md
@@ -245,7 +235,7 @@ def save_parameters(model:PINN3DModel, result_df:pd.DataFrame, path=RESULTS_DIR 
 if __name__ == "__main__":
     torch.manual_seed(42)
     np.random.seed(42)
-    data_path = "/Users/tinonturjamajumder/Catkin_Biofilm_Adsorption/data of biofilm(TINON BHAI).xlsx"
+    data_path = PROJECT_ROOT / 'data' / 'data_of_biofilm.xlsx'
     data = load_data(data_path)
     INPUT_SIZE = 3
     HIDDEN_SIZE  = 32

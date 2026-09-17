@@ -8,6 +8,10 @@ from data import Data
 from pinn1D import KineticsPINNModel
 import torch.nn.functional as F
 import numpy as np
+from pathlib import Path
+
+# src/pinn1D/pinn1D_train.py -> project root is two levels up
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 # declare the device
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
@@ -101,7 +105,7 @@ def save_the_model(model, save_path):
 # get the data
 
 if __name__ == "__main__":
-    data_path = './data of biofilm(TINON BHAI).xlsx'
+    data_path = str(PROJECT_ROOT / 'data' / 'data_of_biofilm.xlsx')
     data = Data(data_path=data_path, dataset_name='kinetics').input_output_collocation_data(
         input_features='Time',
         output_feature='qt( catkin)',
@@ -118,5 +122,5 @@ if __name__ == "__main__":
 
     trainining = train_kinetics_data(model=model, optimizer=optimizer, loss_fn=F.mse_loss,
                                       kinetics_data=data, device=device, num_epochs=8000)
-    save_the_model(model, './models/kinetics_pinn_model.pth')
-    print("Model saved successfully at ./models/kinetics_pinn_model.pth")
+    save_the_model(model, str(PROJECT_ROOT / 'models' / 'kinetics_pinn_model.pth'))
+    print(f"Model saved successfully at {PROJECT_ROOT / 'models' / 'kinetics_pinn_model.pth'}")
