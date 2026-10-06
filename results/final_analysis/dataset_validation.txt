@@ -28,15 +28,15 @@ catkin (pfo pso): shape (9, 2), missing values 0, all numeric True
     catkin: [0.0688, 0.0667, 0.0638, 0.0628, 0.0591, 0.0556, 0.0542, 0.0535]  range 0.0535 to 0.0688
     cotton: [0.0417, 0.0417, 0.0417, 0.0417, 0.0417, 0.0417, 0.0417, 0.0416]  range 0.0416 to 0.0417
     A constant ratio means the q column and the removal column of that sheet agree.
-    catkin removal % implied by q at V/m = 0.0417: [43.3, 50.5, 51.3, 53.1, 59.9, 66.5, 69.4, 70.7]
     catkin removal % implied by q at V/m = 0.0833: [21.6, 25.3, 25.7, 26.6, 30.0, 33.2, 34.7, 35.4]
+    catkin removal % implied by q at V/m = 0.0417: [43.3, 50.5, 51.3, 53.1, 59.9, 66.5, 69.4, 70.7]
     catkin removal % stored in the sheet:         [26.2, 31.6, 33.5, 35.2, 42.3, 49.8, 53.3, 55.1]
     The q(t) series is the reference in every fit; the catkin removal-vs-time column is not used.
 
 [5] 170-min kinetic point against the isotherm (isotherm q interpolated at the same Ce)
-    V/m = 0.0417: Ce = 11.72 mg/L, kinetic q = 1.179, isotherm q = outside the isotherm Ce range (12.5 to 35.1)
-    V/m = 0.0543: Ce = 18.30 mg/L, kinetic q = 1.179, isotherm q = 1.119
     V/m = 0.0833: Ce = 25.86 mg/L, kinetic q = 1.179, isotherm q = 1.702
+    V/m = 0.0543: Ce = 18.30 mg/L, kinetic q = 1.179, isotherm q = 1.119
+    V/m = 0.0417: Ce = 11.72 mg/L, kinetic q = 1.179, isotherm q = outside the isotherm Ce range (12.5 to 35.1)
     V/m = 0.1000: Ce = 28.21 mg/L, kinetic q = 1.179, isotherm q = 1.944
     V/m that puts the 170-min kinetic point on the isotherm: 0.0566 L/g
 

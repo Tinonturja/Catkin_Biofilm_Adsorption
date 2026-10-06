@@ -81,14 +81,14 @@ print('\n[4] V/m implied by q / (C0 * removal/100), C0 = 40 mg/L')
 for label, ratio in (('catkin', q[1:] / (C0_KIN * Rk / 100)), ('cotton', qc / (C0_KIN * Rc / 100))):
     print(f'    {label}:', np.round(ratio, 4).tolist(), f' range {ratio.min():.4f} to {ratio.max():.4f}')
 print('    A constant ratio means the q column and the removal column of that sheet agree.')
-for vm in (VM_KIN, 1 / 12):
+for vm in (VM_KIN, 1 / 24):
     print(f'    catkin removal % implied by q at V/m = {vm:.4f}:', np.round(100 * q[1:] / (C0_KIN * vm), 1).tolist())
 print('    catkin removal % stored in the sheet:        ', np.round(Rk, 1).tolist())
 print('    The q(t) series is the reference in every fit; the catkin removal-vs-time column is not used.')
 
 # ---------------------------------------------------------------- 5. kinetic end point against the isotherm
 print('\n[5] 170-min kinetic point against the isotherm (isotherm q interpolated at the same Ce)')
-for vm in (VM_KIN, 0.0543, 1 / 12, 0.1):
+for vm in (VM_KIN, 0.0543, 1 / 24, 0.1):
     ce = C0_KIN - q[-1] / vm
     inside = Ce.min() <= ce <= Ce.max()
     qi = f'{np.interp(ce, Ce, Qe):.3f}' if inside else f'outside the isotherm Ce range ({Ce.min():.1f} to {Ce.max():.1f})'

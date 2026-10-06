@@ -273,7 +273,7 @@ def coupled_residual(lp, vm, fit_vm):
 
 print('\n[C] One PSO rate constant + one Freundlich law + mass balance, fitted to both arms together')
 crows = []
-for label, vm, fit_vm in [('1/24 L/g (recorded: 50 mL on 1.2 g)', VM_KIN, False), ('1/12 L/g (100 mL on 1.2 g)', 1 / 12, False), ('fitted', 0.05, True)]:
+for label, vm, fit_vm in [('1/12 L/g (100 mL on 1.2 g)', VM_KIN, False), ('1/24 L/g (50 mL on 1.2 g)', 1 / 24, False), ('fitted', 0.05, True)]:
     best = None
     for s in range(80):
         p0 = np.r_[np.log([.1, .03, 1.2]) + np.random.default_rng(s).normal(0, .7, 3), np.log(0.05)][:4 if fit_vm else 3]

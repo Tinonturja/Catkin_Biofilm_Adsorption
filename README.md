@@ -70,10 +70,11 @@ What these support:
 - Eight kinetic points at one concentration and one dose, and five isotherm points at one
   contact time and one dose. Dosage takes one value per arm, so no dosage effect can be
   identified.
-- The solution-to-film ratio of the kinetic run is not stored in the workbook, and the scale of the
-  kinetic q column is an open question (it is consistent with 1/12 L/g, while 50 mL on 1.2 g, 1/24 L/g,
-  was recorded). This affects qe-type parameters and rate constants by a constant factor. It does not
-  affect the ranking of the kinetic laws or any R2.
+- The solution-to-film ratio of the kinetic run is not stored in the workbook. It is taken as 100 mL
+  of 40 mg/L dye on 1.2 g of film (1/12 L/g, 12 g/L) and set in `src/final_analysis/common.py`. The
+  kinetic laws are fitted to the q column directly, so the ratio enters only the checks that link q
+  to concentration. A different ratio would rescale qe-type parameters and rate constants by a
+  constant factor and would not change the ranking of the kinetic laws or any R2.
 - No tested ratio lets a single equilibrium law describe both arms, so they are modelled separately
   and the isotherm is read as an uptake curve at 170 min. See `results/final_analysis/classical_fits.txt`,
   part C.

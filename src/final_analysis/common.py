@@ -17,11 +17,12 @@ OUT = ROOT / 'results' / 'final_analysis'
 OUT.mkdir(parents=True, exist_ok=True)
 
 # Experimental constants that are NOT stored in the workbook.
-# Kinetic arm: recorded as 50 mL of 40 mg/L dye on 1.2 g of film (V/m = 1/24 L/g). The q column is
-#   consistent with 1/12 L/g instead; VM_KIN enters only the coupled-arm check, not the kinetic fits.
+# Kinetic arm: 100 mL of 40 mg/L dye on 1.2 g of film (V/m = 1/12 L/g, dose 12 g/L). The q column of
+#   the workbook is on this scale. VM_KIN enters only the checks that link q to concentration
+#   (validate_dataset.py sections 4 and 5, classical_fits.py part C), not the kinetic fits.
 # Isotherm arm: V/m = 0.1 L/g, which is recoverable from the sheet itself (Qe / (C0 - Ce)).
 C0_KIN = 40.0
-VM_KIN = 0.05 / 1.2
+VM_KIN = 0.1 / 1.2
 VM_ISO = 0.1
 
 

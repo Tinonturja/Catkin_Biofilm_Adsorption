@@ -53,10 +53,10 @@ with intercept, 6 standards (line used in the workbook) 0.0167    -0.0263 0.0334
     Langmuir capacity is unbounded (qmax = 1.13e+16, KL = 5.97e-18); its fit equals the linear law.
 
 [C] One PSO rate constant + one Freundlich law + mass balance, fitted to both arms together
-                         kinetic_VM     k2     Kf      n  VM_fitted  RMSE_kinetic  RMSE_isotherm
-1/24 L/g (recorded: 50 mL on 1.2 g) 0.2251 0.0647 1.0210        NaN        0.0941         0.0597
-         1/12 L/g (100 mL on 1.2 g) 0.0409 0.0168 1.4011        NaN        0.1214         0.0686
-                             fitted 0.1093 0.0334 1.2124     0.0543        0.0664         0.0208
+                kinetic_VM     k2     Kf      n  VM_fitted  RMSE_kinetic  RMSE_isotherm
+1/12 L/g (100 mL on 1.2 g) 0.0409 0.0168 1.4011        NaN        0.1214         0.0686
+ 1/24 L/g (50 mL on 1.2 g) 0.2251 0.0647 1.0210        NaN        0.0941         0.0597
+                    fitted 0.1093 0.0334 1.2124     0.0543        0.0664         0.0208
     Separate fits for reference: PSO RMSE 0.0664, Freundlich RMSE (from C0) 0.0208.
     The kinetic q column is taken as given; only the V/m used in the mass balance is varied.
     V/m when fitted as a free parameter: 0.0543 L/g.
