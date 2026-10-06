@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite it using the metadata below."
+title: "Catkin Biofilm Adsorption: kinetic and isotherm analysis of reactive dye adsorption on a Saccharum spontaneum (catkin) CMC/PVA/TiO2 biofilm"
+abstract: >-
+  Analysis code, data and outputs for a study of Avitera Light Red SE
+  adsorption on a citric-acid crosslinked PVA/TiO2/cellulose-microcrystal
+  biofilm made with cellulose microcrystals from Saccharum spontaneum
+  (catkin) flower fibre. Includes dataset validation, nonlinear
+  least-squares fits of eleven kinetic and three isotherm laws with AICc,
+  leave-one-out error, profile-likelihood intervals and a calibration
+  sensitivity analysis, and a pre-specified simulation of how sampling
+  density and placement affect recovery of the kinetic law.
+type: software
+license: MIT
+version: "1.0.0"
+date-released: "2026-10-06"
+repository-code: "https://github.com/Tinonturja/Catkin_Biofilm_Adsorption"
+keywords:
+  - adsorption
+  - reactive dye
+  - adsorption kinetics
+  - Freundlich isotherm
+  - model selection
+  - cellulose microcrystals
+authors:
+  - family-names: Majumder
+    given-names: Tinon Turja
+    # orcid: "https://orcid.org/0000-0000-0000-0000"

@@ -1,0 +1,16 @@
+truth,noise,mean_agree,frac_agree_le_1of8,median_agree
+T1_PSO,N1_add_0.01,0.940625,0.025,1.0
+T1_PSO,N2_prop_3pct,0.90625,0.02,1.0
+T1_PSO,N3_add_0.03,0.888125,0.015,0.875
+T2_PFO,N1_add_0.01,0.993125,0.0,1.0
+T2_PFO,N2_prop_3pct,0.954375,0.0,1.0
+T2_PFO,N3_add_0.03,0.938125,0.005,1.0
+T3_Elovich,N1_add_0.01,0.915625,0.03,1.0
+T3_Elovich,N2_prop_3pct,0.890625,0.035,1.0
+T3_Elovich,N3_add_0.03,0.906875,0.02,1.0
+T4_TwoSitePFO,N1_add_0.01,0.679375,0.165,0.875
+T4_TwoSitePFO,N2_prop_3pct,0.721875,0.135,0.875
+T4_TwoSitePFO,N3_add_0.03,0.788125,0.1,0.875
+T5_PSO+sqrt,N1_add_0.01,0.909375,0.045,1.0
+T5_PSO+sqrt,N2_prop_3pct,0.745,0.055,0.875
+T5_PSO+sqrt,N3_add_0.03,0.7525,0.095,0.875

@@ -1,0 +1,64 @@
+[A] Kinetic candidate laws, n = 8 measured points (t > 0), sorted by AICc with K = k + 1
+                  model  k   RMSE  dAICc_K=k  dAICc_K=k+1  akaike_weight    dBIC  LOO_RMSE  sign_runs  R2_measured_points  R2_with_origin_row
+        Burst + sqrt(t)  2 0.0247     0.0000       0.0000         0.7742  0.0000    0.0330          5              0.9752              0.6493
+              Power law  2 0.0297     2.9408       2.9408         0.1779  2.9408    0.0369          3              0.9641              0.9932
+                Elovich  2 0.0362     6.1377       6.1377         0.0360  6.1377    0.0462          3              0.9465              0.9898
+     PSO + k_id sqrt(t)  3 0.0243     5.3638       9.0971         0.0082  1.8432    0.0358          5              0.9759              0.9954
+            Fractal PSO  3 0.0297     8.5408      12.2741         0.0017  5.0202    0.0369          3              0.9641              0.9932
+                 Avrami  3 0.0297     8.5408      12.2741         0.0017  5.0202    0.0369          3              0.9641              0.9932
+                    PSO  2 0.0664    15.8239      15.8239         0.0003 15.8239    0.0943          3              0.8205              0.9658
+Sphere diffusion (HSDM)  2 0.0759    17.9681      17.9681         0.0001 17.9681    0.1039          3              0.7653              0.9553
+                    PFO  2 0.1020    22.6943      22.6943         0.0000 22.6943    0.1475          3              0.5764              0.9192
+           Two-site PFO  4 0.0203    11.8312      24.8979         0.0000  1.0567    0.0458          5              0.9832              0.9968
+           Two-site PSO  4 0.0231    13.8612      26.9279         0.0000  3.0867    0.0462          5              0.9783              0.9959
+
+    Fitted parameters
+    Burst + sqrt(t)            q_burst = 0.5968; k_id = 0.04607
+    Power law                  a = 0.4728; b = 0.177
+    Elovich                    alpha = 1.158; beta = 6.131
+    PSO + k_id sqrt(t)         qe = 0.6206; k2 = 3.692; k_id = 0.04408
+    Fractal PSO                qe = 6.021e+11; k = 7.852e-13; alpha = 0.177
+    Avrami                     qe = 3.341e+05; k = 9.046e-34; n = 0.177
+    PSO                        qe = 1.158; k2 = 0.1093
+    Sphere diffusion (HSDM)    qe = 1.109; De/r2 = 0.003912
+    PFO                        qe = 1.055; k1 = 0.08638
+    Two-site PFO               q1 = 0.748; k_a = 0.2512; q2 = 0.7863; k_b = 0.004975
+    Two-site PSO               q1 = 1.426; k_a = 0.001667; q2 = 0.7926; k_b = 0.9565
+
+    Notes
+    - AICc with K = k + 1 counts the residual variance as an estimated quantity; K = k does not. Both are given.
+    - R2_with_origin_row adds the (0, 0) row, which is fixed by definition and not a measurement.
+    - Burst + sqrt(t) has q(0) = q_burst, not 0, so its R2 with the origin row is not comparable with the others.
+    - Akaike weights use the K = k + 1 column.
+    - Capacity parameter unbounded (fit not identified): Fractal PSO, Avrami.
+
+[B] Isotherm laws, n = 5 measured points
+     model  k                       parameters  RMSE_vs_Ce  RMSE_predicted_from_C0  dAICc_K=k  LOO_RMSE_vs_Ce     R2
+Freundlich  2          Kf = 0.03342; n = 1.212      0.0373                  0.0208     0.0000          0.0553 0.9964
+  Langmuir  2 qmax = 1.134e+16; KL = 5.968e-18      0.1015                  0.0605    10.0063          0.1303 0.9735
+    Linear  1                      K = 0.06769      0.1015                  0.0605     3.3397          0.1303 0.9735
+    dAICc is given for K = k only: with n = 5, counting the residual variance leaves too few degrees of freedom.
+    Freundlich exponent n = 1.212. 95 % profile interval at the workbook calibration:
+      small-sample F threshold (3 residual degrees of freedom): 1.06 to 1.38
+      large-sample chi-square threshold (too narrow for n = 5): 1.12 to 1.31
+
+[B2] Sensitivity of the Freundlich exponent to the calibration line
+                                            calibration  slope  intercept     Kf      n  removal_%_at_20  removal_%_at_60
+with intercept, 6 standards (line used in the workbook) 0.0167    -0.0263 0.0334 1.2121          37.3161          41.4192
+                            through origin, 6 standards 0.0163     0.0000 0.0705 1.0157          43.9670          42.7829
+               with intercept, highest standard dropped 0.0177    -0.0563 0.0152 1.4409          32.3035          41.8296
+               through origin, highest standard dropped 0.0167     0.0000 0.0744 1.0153          45.2035          44.0456
+    Calibration residual sd 0.051 absorbance (3.1 mg/L) from 6 standards. Monte Carlo over the
+    line (3960 valid draws of 4000): n median 1.22, 95 % range 0.56 to 2.23, P(n > 1) = 0.76.
+    Langmuir capacity is unbounded (qmax = 1.13e+16, KL = 5.97e-18); its fit equals the linear law.
+
+[C] One PSO rate constant + one Freundlich law + mass balance, fitted to both arms together
+                         kinetic_VM     k2     Kf      n  VM_fitted  RMSE_kinetic  RMSE_isotherm
+1/24 L/g (recorded: 50 mL on 1.2 g) 0.2251 0.0647 1.0210        NaN        0.0941         0.0597
+         1/12 L/g (100 mL on 1.2 g) 0.0409 0.0168 1.4011        NaN        0.1214         0.0686
+                             fitted 0.1093 0.0334 1.2124     0.0543        0.0664         0.0208
+    Separate fits for reference: PSO RMSE 0.0664, Freundlich RMSE (from C0) 0.0208.
+    The kinetic q column is taken as given; only the V/m used in the mass balance is varied.
+    V/m when fitted as a free parameter: 0.0543 L/g.
+
+Saved kinetic_candidates.csv, isotherm_fits.csv, isotherm_calibration_sensitivity.csv, classical_fits.json, classical_fits.png, classical_fits.pdf
