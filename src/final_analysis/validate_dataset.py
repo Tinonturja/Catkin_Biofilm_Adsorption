@@ -23,11 +23,9 @@ print('sheets:', X.sheet_names)
 
 iso = pd.read_excel(X, 'catkin')
 kin = pd.read_excel(X, 'catkin (pfo pso)')
-cotton_iso = pd.read_excel(X, 'waste cotton')
-cotton_kin = pd.read_excel(X, 'waste cotton( PFO PSO)')
 rem_conc = pd.read_excel(X, 'removal against % concentration')
-rem_time = pd.read_excel(X, 'removal% against time', header=None).iloc[2:].astype(float).reset_index(drop=True)
-rem_time.columns = ['t', 'catkin', 'cotton']
+rem_time = pd.read_excel(X, 'removal% against time', header=None).iloc[2:, :2].astype(float).reset_index(drop=True)
+rem_time.columns = ['t', 'catkin']
 
 for name, d in [('catkin', iso), ('catkin (pfo pso)', kin)]:
     numeric = all(np.issubdtype(t, np.number) for t in d.dtypes)
@@ -41,10 +39,6 @@ Qe = iso['Qe'].to_numpy()
 slope, icpt = np.polyfit(Ce, A, 1)
 print('\n[1] Calibration implied by the catkin isotherm sheet')
 print(f'    A = {slope:.6f} * C(mg/L) {icpt:+.5f}; largest residual {abs(A - (slope * Ce + icpt)).max():.2e}')
-Ac = cotton_iso['Absorbance'].to_numpy()
-Cc = cotton_iso['concentration'].to_numpy()
-s2, i2 = np.polyfit(Cc, Ac, 1)
-print(f'    cotton sheet: A = {s2:.6f} * C {i2:+.5f}; same line: {np.allclose([slope, icpt], [s2, i2], atol=2e-5)}')
 
 # ---------------------------------------------------------------- 2. isotherm chain
 recomputed = {
@@ -60,7 +54,7 @@ for col, val in recomputed.items():
     print(f'    {col:<28s} {abs(iso[col].to_numpy() - val).max():.2e}')
 print('    V/m implied by Qe/(C0-Ce):', np.round(Qe / (C0 - Ce), 6).tolist())
 print('    removal sheet equals isotherm-sheet removal:',
-      bool(np.allclose(rem_conc.iloc[:, 2], iso['removal percentage(catkin)'], atol=1e-5)))
+      bool(np.allclose(rem_conc['removal percentage(catkin)'], iso['removal percentage(catkin)'], atol=1e-5)))
 
 # ---------------------------------------------------------------- 3. kinetics
 t = kin['Time'].to_numpy(float)
@@ -75,12 +69,10 @@ print(f'    q(10)/q(170) = {q[1] / q[-1]:.3f}; gain over the last interval = {10
 
 # ---------------------------------------------------------------- 4. q(t) against the removal sheet
 Rk = rem_time['catkin'].to_numpy()
-Rc = rem_time['cotton'].to_numpy()
-qc = cotton_kin.iloc[1:, 1].to_numpy(float)
 print('\n[4] V/m implied by q / (C0 * removal/100), C0 = 40 mg/L')
-for label, ratio in (('catkin', q[1:] / (C0_KIN * Rk / 100)), ('cotton', qc / (C0_KIN * Rc / 100))):
-    print(f'    {label}:', np.round(ratio, 4).tolist(), f' range {ratio.min():.4f} to {ratio.max():.4f}')
-print('    A constant ratio means the q column and the removal column of that sheet agree.')
+ratio = q[1:] / (C0_KIN * Rk / 100)
+print('    catkin:', np.round(ratio, 4).tolist(), f' range {ratio.min():.4f} to {ratio.max():.4f}')
+print('    A constant ratio would mean the q column and the removal column agree.')
 for vm in (VM_KIN, 1 / 24):
     print(f'    catkin removal % implied by q at V/m = {vm:.4f}:', np.round(100 * q[1:] / (C0_KIN * vm), 1).tolist())
 print('    catkin removal % stored in the sheet:        ', np.round(Rk, 1).tolist())

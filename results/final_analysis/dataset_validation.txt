@@ -1,10 +1,9 @@
-sheets: ['catkin', 'waste cotton', 'waste cotton( PFO PSO)', 'catkin (pfo pso)', 'removal against % concentration', 'removal% against time']
+sheets: ['catkin', 'catkin (pfo pso)', 'removal against % concentration', 'removal% against time']
 catkin: shape (5, 9), missing values 0, all numeric True
 catkin (pfo pso): shape (9, 2), missing values 0, all numeric True
 
 [1] Calibration implied by the catkin isotherm sheet
     A = 0.016684 * C(mg/L) -0.02630; largest residual 2.42e-06
-    cotton sheet: A = 0.016684 * C -0.02631; same line: True
 
 [2] Isotherm derived columns, largest |sheet - recomputed|
     Co-Ce                        3.55e-15
@@ -26,8 +25,7 @@ catkin (pfo pso): shape (9, 2), missing values 0, all numeric True
 
 [4] V/m implied by q / (C0 * removal/100), C0 = 40 mg/L
     catkin: [0.0688, 0.0667, 0.0638, 0.0628, 0.0591, 0.0556, 0.0542, 0.0535]  range 0.0535 to 0.0688
-    cotton: [0.0417, 0.0417, 0.0417, 0.0417, 0.0417, 0.0417, 0.0417, 0.0416]  range 0.0416 to 0.0417
-    A constant ratio means the q column and the removal column of that sheet agree.
+    A constant ratio would mean the q column and the removal column agree.
     catkin removal % implied by q at V/m = 0.0833: [21.6, 25.3, 25.7, 26.6, 30.0, 33.2, 34.7, 35.4]
     catkin removal % implied by q at V/m = 0.0417: [43.3, 50.5, 51.3, 53.1, 59.9, 66.5, 69.4, 70.7]
     catkin removal % stored in the sheet:         [26.2, 31.6, 33.5, 35.2, 42.3, 49.8, 53.3, 55.1]
