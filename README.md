@@ -1,5 +1,7 @@
 # Catkin Biofilm Adsorption: kinetic and isotherm analysis
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23195584.svg)](https://doi.org/10.5281/zenodo.23195584)
+
 Analysis code and outputs for a study of reactive dye (Avitera Light Red SE) adsorption on a
 citric-acid crosslinked PVA/TiO2/cellulose-microcrystal biofilm, in which the cellulose
 microcrystals were extracted from the flower fibre of *Saccharum spontaneum* (catkin).
@@ -151,7 +153,12 @@ The experimental data were measured by the co-authors of the accompanying manusc
 
 ## Citation
 
-See `CITATION.cff`.
+Majumder, T. T. (2026). Catkin Biofilm Adsorption: kinetic and isotherm analysis of reactive dye
+adsorption on a Saccharum spontaneum (catkin) CMC/PVA/TiO2 biofilm (v1.0.0). Zenodo.
+https://doi.org/10.5281/zenodo.23195585
+
+The DOI above identifies version 1.0.0. The DOI 10.5281/zenodo.23195584 always resolves to the
+latest version. Citation metadata is in `CITATION.cff`.
 
 ## License
 
