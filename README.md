@@ -139,12 +139,12 @@ Fitted values reproduce to about four significant figures across platforms. Para
 degenerate laws (Langmuir capacity, Avrami and fractal-PSO capacity) are not identified and
 their printed values vary between machines.
 
-## Related repository
+## Earlier PINN model
 
-The physics-informed neural network developed during this project (PINN3D) is kept separately
-at https://github.com/Tinonturja/PINN3D_Adsorption and is not part of this archive. The
-design-density study here includes a small kinetic-only PINN as one of several comparison
-learners (`src/design_density/ml.py`).
+A physics-informed neural network (PINN3D) was developed earlier in this project. It is not part
+of this archive or of the manuscript: it fitted the training points closely but generalised poorly
+under leave-one-out validation. The design-density study here includes a small kinetic-only PINN as
+one of several comparison learners (`src/design_density/ml.py`) and tests that question directly.
 
 ## Author
 
